@@ -3,7 +3,7 @@ import pytest
 from dotenv import load_dotenv
 from appium.options.android import UiAutomator2Options
 from selene import browser
-import utils.data
+
 
 
 def pytest_addoption(parser):
@@ -31,7 +31,10 @@ def android_mobile_management(context):
     browser.config.driver_remote_url = settings.remote_url
     browser.config.driver_options = options
 
+    browser.config.timeout = 10.0
 
     yield
+
+
 
     browser.quit()

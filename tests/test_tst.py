@@ -1,26 +1,38 @@
 import configuration
 import utils.data
-
+import allure
+from allure_commons._allure import step
 from appium.webdriver.common.appiumby import AppiumBy
 from selene import browser, have
 
 
-check_txt = []
-
 def test_print_var(context):
-    print(f'var1 = {configuration.settings.var1}')
-    print(utils.data.set_check_text(context))
+    # print(f'var1 = {configuration.settings.var1}')
+    # print(utils.data.set_check_text(context))
+    allure.dynamic.parameter('context', context)
+    check_txt = utils.data.set_check_text(context)
 
-    check_txt_t = utils.data.set_check_text(context)
+    with step('Verify content page 1'):
+        results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
+        results.should(have.text(check_txt[0]))
 
-    results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
-    results.should(have.text(check_txt_t[0]))
-    browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
-    results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
-    results.should(have.text(check_txt_t[1]))
-    browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
-    results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
-    results.should(have.text(check_txt_t[2]))
-    browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
-    results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
-    results.should(have.text(check_txt_t[3]))
+    with step('Going next page'):
+        browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
+
+    with step('Verify content page 2'):
+        results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
+        results.should(have.text(check_txt[1]))
+
+    with step('Going next page'):
+        browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
+
+    with step('Verify content page 3'):
+        results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
+        results.should(have.text(check_txt[2]))
+
+    with step('Going next page'):
+        browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/fragment_onboarding_forward_button')).click()
+
+    with step('Verify content page 4'):
+        results = browser.element((AppiumBy.ID, 'org.wikipedia.alpha:id/primaryTextView'))
+        results.should(have.text(check_txt[3]))
